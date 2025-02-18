@@ -1,10 +1,16 @@
 package com.example.validatiotrdemo.Model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,6 +42,7 @@ public class User {
     // "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,50}$",
     // message = "Password must contain 1 uppercase, 1 lowercase, 1 number, 1
     // special character")
+    @JsonIgnore
     private String password;
 
     @NotNull(message = "Phone cannot be null")
@@ -47,6 +54,10 @@ public class User {
     @NotBlank(message = "Address cannot be empty")
     @Size(min = 10, max = 100, message = "Address must be between 10 and 100 characters")
     private String address;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<PhotoPost> photoPost;
 
     public User() {
     }
@@ -107,5 +118,15 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public List<PhotoPost> getPhotoPost() {
+        return photoPost;
+    }
+
+    public void setPhotoPost(List<PhotoPost> photoPost) {
+        this.photoPost = photoPost;
+    }
+
+    
 
 }

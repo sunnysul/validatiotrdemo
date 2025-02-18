@@ -59,4 +59,10 @@ public class UserServices implements IUserServices {
         return auth.isAuthenticated();
     }
 
+    @Override
+    public User getUserByEmail(String email) {
+
+        return userRepo.findByEmail(email);
+    }
+
 }

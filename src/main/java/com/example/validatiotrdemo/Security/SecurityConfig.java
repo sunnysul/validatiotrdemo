@@ -29,7 +29,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizeHttpRequests -> {
             authorizeHttpRequests
                     .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**",
-                            "/login", "/register")
+                            "/login", "/register", "/api/photopost/all")
                     .permitAll();
             authorizeHttpRequests.anyRequest().authenticated();
         });

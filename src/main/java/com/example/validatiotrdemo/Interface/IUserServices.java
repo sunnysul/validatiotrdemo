@@ -21,4 +21,6 @@ public interface IUserServices {
     // check login
     public boolean veryfyUser(User user);
 
+    public User getUserByEmail(String email);
+
 }

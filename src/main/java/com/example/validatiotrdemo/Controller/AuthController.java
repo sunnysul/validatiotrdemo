@@ -38,10 +38,6 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    // public String register() {
-
-    // return "User Registration successful";
-    // }
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
