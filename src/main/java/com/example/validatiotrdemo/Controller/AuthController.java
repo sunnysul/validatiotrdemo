@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.validatiotrdemo.Auth.JwtService;
 import com.example.validatiotrdemo.Model.User;
+import com.example.validatiotrdemo.Payload.Response.SimpleResponse;
 import com.example.validatiotrdemo.Services.UserServices;
 
 import jakarta.validation.Valid;
@@ -27,14 +28,28 @@ public class AuthController {
     JwtService jwtService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+    SimpleResponse simpleResponse = new SimpleResponse();
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
+
         if (userServices2.veryfyUser(user)) {
             // return ResponseEntity.accepted(jwtService.generateToken(user.getEmail()));
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtService.generateToken(user.getEmail()));
+            // return
+            // ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtService.generateToken(user.getEmail()));
+
+            simpleResponse.setMessage(jwtService.generateToken(user.getEmail()));
+            simpleResponse.setStatus(HttpStatus.ACCEPTED);
+            simpleResponse.setSuccess(true);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(simpleResponse);
+
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid
+        // credentials");
+        simpleResponse.setMessage("Invalid credentials");
+        simpleResponse.setStatus(HttpStatus.UNAUTHORIZED);
+        simpleResponse.setSuccess(false);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(simpleResponse);
     }
 
     @PostMapping("/register")
@@ -43,12 +58,24 @@ public class AuthController {
 
         try {
             user = userServices2.createUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
+            // return ResponseEntity.status(HttpStatus.CREATED).body("User created
+            // successfully");
+
+            simpleResponse.setMessage("User created successfully");
+            simpleResponse.setStatus(HttpStatus.CREATED);
+            simpleResponse.setSuccess(true);
+            return ResponseEntity.status(HttpStatus.CREATED).body(simpleResponse);
+
         } catch (Exception e) {
-            System.out.println("---------------------------------");
-            System.out.println(e.getMessage());
-            System.out.println("---------------------------------");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not created");
+            // System.out.println("---------------------------------");
+            // System.out.println(e.getMessage());
+            // System.out.println("---------------------------------");
+            // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not
+            // created");
+            simpleResponse.setMessage("User not created");
+            simpleResponse.setStatus(HttpStatus.BAD_REQUEST);
+            simpleResponse.setSuccess(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(simpleResponse);
         }
     }
 

@@ -42,7 +42,7 @@ public class User {
     // "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,50}$",
     // message = "Password must contain 1 uppercase, 1 lowercase, 1 number, 1
     // special character")
-    @JsonIgnore
+    // @JsonIgnore
     private String password;
 
     @NotNull(message = "Phone cannot be null")
@@ -126,7 +126,5 @@ public class User {
     public void setPhotoPost(List<PhotoPost> photoPost) {
         this.photoPost = photoPost;
     }
-
-    
 
 }
