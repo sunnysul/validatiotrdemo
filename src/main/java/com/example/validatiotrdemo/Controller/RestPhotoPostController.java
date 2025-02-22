@@ -8,8 +8,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,7 @@ import com.example.validatiotrdemo.Services.PhotoPostServices;
 import com.example.validatiotrdemo.Services.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.server.PathParam;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -124,6 +127,24 @@ public class RestPhotoPostController {
         User user = userServices.getUserByEmail(email);
 
         return ResponseEntity.status(HttpStatus.OK).body(photoPostServices.getPhotoPostsByUser(user));
+    }
+
+    // delete photo post
+    @DeleteMapping("delete/{postid}")
+    public ResponseEntity<?> deletePhotoPost(@PathVariable  ("postid") Long postid) {
+        System.out.println(postid);
+        SimpleResponse simpleResponse = new SimpleResponse();
+        if (photoPostServices.deletePhotoPost(postid)) {
+            simpleResponse.setMessage("Photo post deleted successfully");
+            simpleResponse.setSuccess(true);
+            simpleResponse.setStatus(HttpStatus.OK);
+            return ResponseEntity.ok().body(simpleResponse);
+        } else {
+            simpleResponse.setMessage("Photo post not deleted");
+            simpleResponse.setSuccess(false);
+            simpleResponse.setStatus(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(simpleResponse);
+        }
     }
 
 }

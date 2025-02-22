@@ -11,8 +11,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.example.validatiotrdemo.Payload.Response.SimpleResponse;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 @RestControllerAdvice
 public class UserErrorHandling {
@@ -84,13 +87,69 @@ public class UserErrorHandling {
     // SignatureException
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<SimpleResponse> SignatureExceptionhandleException(SignatureException e) {
-
         SimpleResponse simpleResponse = new SimpleResponse();
-        simpleResponse.setMessage("Invalid Token.");
+        simpleResponse.setMessage("Token expired or invalid. Please login again.");
         simpleResponse.setStatus(HttpStatus.UNAUTHORIZED);
         simpleResponse.setSuccess(false);
 
-        return ResponseEntity.badRequest().body(simpleResponse);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(simpleResponse);
+    }
+
+    // ExpiredJwtException
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<SimpleResponse> ExpiredJwtExceptionhandleException(ExpiredJwtException e) {
+        SimpleResponse simpleResponse = new SimpleResponse();
+        simpleResponse.setMessage("Token expired. Please login again.");
+        simpleResponse.setStatus(HttpStatus.UNAUTHORIZED);
+        simpleResponse.setSuccess(false);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(simpleResponse);
+    }
+
+    // io.jsonwebtoken.security.SignatureException
+    @ExceptionHandler(io.jsonwebtoken.security.SignatureException.class)
+    public ResponseEntity<SimpleResponse> handleSignatureException(io.jsonwebtoken.security.SignatureException e) {
+        SimpleResponse simpleResponse = new SimpleResponse();
+        simpleResponse.setMessage("Token invalid. Please login again.");
+        simpleResponse.setStatus(HttpStatus.UNAUTHORIZED);
+        simpleResponse.setSuccess(false);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(simpleResponse);
+    }
+
+    // Exception
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<SimpleResponse> handleException(Exception e) {
+
+        SimpleResponse simpleResponse = new SimpleResponse();
+        simpleResponse.setMessage("Internal Server Error.");
+        simpleResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        simpleResponse.setSuccess(false);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(simpleResponse);
+    }
+
+    // NoResourceFoundException
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<SimpleResponse> handleNoResourceFoundException(NoResourceFoundException e) {
+        SimpleResponse simpleResponse = new SimpleResponse();
+        simpleResponse.setMessage("Resource not found.");
+        simpleResponse.setStatus(HttpStatus.NOT_FOUND);
+        simpleResponse.setSuccess(false);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(simpleResponse);
+    }
+
+    // BadCredentialsException
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<SimpleResponse> handleBadCredentialsException(
+            org.springframework.security.authentication.BadCredentialsException e) {
+        SimpleResponse simpleResponse = new SimpleResponse();
+        simpleResponse.setMessage("Invalid credentials.");
+        simpleResponse.setStatus(HttpStatus.UNAUTHORIZED);
+        simpleResponse.setSuccess(false);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(simpleResponse);
     }
 
 }
